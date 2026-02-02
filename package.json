@@ -1,0 +1,44 @@
+{
+  "name": "mukhawar-platform",
+  "version": "1.0.0",
+  "description": "Mukhawar - Managed Digital Tailoring and Embroidery Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "client": "cd client && npm run dev",
+    "dev:full": "concurrently \"npm run dev\" \"npm run client\"",
+    "build": "node scripts/build.js",
+    "build:client": "cd client && npm run build",
+    "install:all": "npm install && cd client && npm install",
+    "postinstall": "cd client && npm install",
+    "railway:build": "npm install && cd client && npm install && npm run build:client",
+    "seed": "node scripts/seed.js",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "keywords": ["tailoring", "embroidery", "marketplace", "UAE"],
+  "author": "Sultan Al Suwaidi",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^8.0.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.7",
+    "twilio": "^4.19.0",
+    "stripe": "^14.5.0",
+    "socket.io": "^4.6.0",
+    "winston": "^3.11.0",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "compression": "^1.7.4",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "concurrently": "^8.2.2"
+  }
+}
