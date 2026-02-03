@@ -5,7 +5,7 @@ const ShopProfile = require('../models/ShopProfile');
 const Order = require('../models/Order');
 const Design = require('../models/Design');
 const PricingRule = require('../models/PricingRule');
-const auth = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 // Admin authorization middleware
 const adminAuth = (req, res, next) => {
@@ -18,7 +18,7 @@ const adminAuth = (req, res, next) => {
 // @route   GET /api/admin/dashboard
 // @desc    Get admin dashboard overview
 // @access  Private (Admin)
-router.get('/dashboard', auth, adminAuth, async (req, res) => {
+router.get('/dashboard', protect, adminAuth, async (req, res) => {
   try {
     // User statistics
     const totalCustomers = await User.countDocuments({ role: 'customer' });
@@ -100,7 +100,7 @@ router.get('/dashboard', auth, adminAuth, async (req, res) => {
 // @route   GET /api/admin/certifications/pending
 // @desc    Get pending shop certifications
 // @access  Private (Admin)
-router.get('/certifications/pending', auth, adminAuth, async (req, res) => {
+router.get('/certifications/pending', protect, adminAuth, async (req, res) => {
   try {
     const pendingShops = await ShopProfile.find({ certificationStatus: 'pending' })
       .populate('userId', 'nameAr nameEn email phone')
@@ -116,7 +116,7 @@ router.get('/certifications/pending', auth, adminAuth, async (req, res) => {
 // @route   PUT /api/admin/certifications/:shopId/approve
 // @desc    Approve shop certification
 // @access  Private (Admin)
-router.put('/certifications/:shopId/approve', auth, adminAuth, async (req, res) => {
+router.put('/certifications/:shopId/approve', protect, adminAuth, async (req, res) => {
   try {
     const { certificationLevel = 'certified', notes } = req.body;
 
@@ -145,7 +145,7 @@ router.put('/certifications/:shopId/approve', auth, adminAuth, async (req, res) 
 // @route   PUT /api/admin/certifications/:shopId/reject
 // @desc    Reject shop certification
 // @access  Private (Admin)
-router.put('/certifications/:shopId/reject', auth, adminAuth, async (req, res) => {
+router.put('/certifications/:shopId/reject', protect, adminAuth, async (req, res) => {
   try {
     const { reason } = req.body;
 
@@ -172,7 +172,7 @@ router.put('/certifications/:shopId/reject', auth, adminAuth, async (req, res) =
 // @route   GET /api/admin/orders
 // @desc    Get all orders (admin view)
 // @access  Private (Admin)
-router.get('/orders', auth, adminAuth, async (req, res) => {
+router.get('/orders', protect, adminAuth, async (req, res) => {
   try {
     const { status, shopId, customerId, page = 1, limit = 20 } = req.query;
 
@@ -210,7 +210,7 @@ router.get('/orders', auth, adminAuth, async (req, res) => {
 // @route   PUT /api/admin/orders/:id/override
 // @desc    Admin override order status
 // @access  Private (Admin)
-router.put('/orders/:id/override', auth, adminAuth, async (req, res) => {
+router.put('/orders/:id/override', protect, adminAuth, async (req, res) => {
   try {
     const { status, note } = req.body;
 
@@ -243,7 +243,7 @@ router.put('/orders/:id/override', auth, adminAuth, async (req, res) => {
 // @route   GET /api/admin/shops
 // @desc    Get all shops
 // @access  Private (Admin)
-router.get('/shops', auth, adminAuth, async (req, res) => {
+router.get('/shops', protect, adminAuth, async (req, res) => {
   try {
     const { certificationStatus, page = 1, limit = 20 } = req.query;
 
@@ -277,7 +277,7 @@ router.get('/shops', auth, adminAuth, async (req, res) => {
 // @route   GET /api/admin/pricing
 // @desc    Get pricing rules
 // @access  Private (Admin)
-router.get('/pricing', auth, adminAuth, async (req, res) => {
+router.get('/pricing', protect, adminAuth, async (req, res) => {
   try {
     const { ruleType } = req.query;
 
@@ -296,7 +296,7 @@ router.get('/pricing', auth, adminAuth, async (req, res) => {
 // @route   POST /api/admin/pricing
 // @desc    Create pricing rule
 // @access  Private (Admin)
-router.post('/pricing', auth, adminAuth, async (req, res) => {
+router.post('/pricing', protect, adminAuth, async (req, res) => {
   try {
     const pricingRule = new PricingRule(req.body);
     await pricingRule.save();
@@ -311,7 +311,7 @@ router.post('/pricing', auth, adminAuth, async (req, res) => {
 // @route   PUT /api/admin/pricing/:id
 // @desc    Update pricing rule
 // @access  Private (Admin)
-router.put('/pricing/:id', auth, adminAuth, async (req, res) => {
+router.put('/pricing/:id', protect, adminAuth, async (req, res) => {
   try {
     const pricingRule = await PricingRule.findByIdAndUpdate(
       req.params.id,
@@ -333,7 +333,7 @@ router.put('/pricing/:id', auth, adminAuth, async (req, res) => {
 // @route   DELETE /api/admin/pricing/:id
 // @desc    Delete pricing rule
 // @access  Private (Admin)
-router.delete('/pricing/:id', auth, adminAuth, async (req, res) => {
+router.delete('/pricing/:id', protect, adminAuth, async (req, res) => {
   try {
     const pricingRule = await PricingRule.findByIdAndUpdate(
       req.params.id,
@@ -355,7 +355,7 @@ router.delete('/pricing/:id', auth, adminAuth, async (req, res) => {
 // @route   GET /api/admin/reports/revenue
 // @desc    Get revenue report
 // @access  Private (Admin)
-router.get('/reports/revenue', auth, adminAuth, async (req, res) => {
+router.get('/reports/revenue', protect, adminAuth, async (req, res) => {
   try {
     const { startDate, endDate, groupBy = 'month' } = req.query;
 
@@ -409,7 +409,7 @@ router.get('/reports/revenue', auth, adminAuth, async (req, res) => {
 // @route   GET /api/admin/reports/performance
 // @desc    Get shop performance metrics
 // @access  Private (Admin)
-router.get('/reports/performance', auth, adminAuth, async (req, res) => {
+router.get('/reports/performance', protect, adminAuth, async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 

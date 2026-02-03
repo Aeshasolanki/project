@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const DeliveryJob = require('../models/DeliveryJob');
 const Order = require('../models/Order');
-const auth = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 // @route   POST /api/delivery/jobs
 // @desc    Create delivery job (auto-triggered or manual)
 // @access  Private (Admin/System)
-router.post('/jobs', auth, async (req, res) => {
+router.post('/jobs', protect, async (req, res) => {
   try {
     if (!['admin', 'system'].includes(req.user.role)) {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -65,7 +65,7 @@ router.post('/jobs', auth, async (req, res) => {
 // @route   GET /api/delivery/jobs
 // @desc    Get delivery jobs
 // @access  Private
-router.get('/jobs', auth, async (req, res) => {
+router.get('/jobs', protect, async (req, res) => {
   try {
     const { status, page = 1, limit = 20 } = req.query;
 
@@ -121,7 +121,7 @@ router.get('/jobs', auth, async (req, res) => {
 // @route   GET /api/delivery/jobs/:id
 // @desc    Get delivery job details
 // @access  Private
-router.get('/jobs/:id', auth, async (req, res) => {
+router.get('/jobs/:id', protect, async (req, res) => {
   try {
     const job = await DeliveryJob.findById(req.params.id)
       .populate('orderId', 'orderNumber items')
@@ -159,7 +159,7 @@ router.get('/jobs/:id', auth, async (req, res) => {
 // @route   PUT /api/delivery/jobs/:id/assign
 // @desc    Assign delivery partner to job
 // @access  Private (Admin)
-router.put('/jobs/:id/assign', auth, async (req, res) => {
+router.put('/jobs/:id/assign', protect, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ success: false, message: 'Admin access required' });
@@ -200,7 +200,7 @@ router.put('/jobs/:id/assign', auth, async (req, res) => {
 // @route   PUT /api/delivery/jobs/:id/pickup
 // @desc    Mark pickup completed
 // @access  Private (Delivery Partner)
-router.put('/jobs/:id/pickup', auth, async (req, res) => {
+router.put('/jobs/:id/pickup', protect, async (req, res) => {
   try {
     if (req.user.role !== 'delivery_partner') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -250,7 +250,7 @@ router.put('/jobs/:id/pickup', auth, async (req, res) => {
 // @route   PUT /api/delivery/jobs/:id/deliver
 // @desc    Mark delivery completed
 // @access  Private (Delivery Partner)
-router.put('/jobs/:id/deliver', auth, async (req, res) => {
+router.put('/jobs/:id/deliver', protect, async (req, res) => {
   try {
     if (req.user.role !== 'delivery_partner') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -305,7 +305,7 @@ router.put('/jobs/:id/deliver', auth, async (req, res) => {
 // @route   PUT /api/delivery/jobs/:id/location
 // @desc    Update delivery partner location
 // @access  Private (Delivery Partner)
-router.put('/jobs/:id/location', auth, async (req, res) => {
+router.put('/jobs/:id/location', protect, async (req, res) => {
   try {
     if (req.user.role !== 'delivery_partner') {
       return res.status(403).json({ success: false, message: 'Access denied' });

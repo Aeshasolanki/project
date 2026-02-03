@@ -3,12 +3,12 @@ const router = express.Router();
 const ShopProfile = require('../models/ShopProfile');
 const Design = require('../models/Design');
 const Order = require('../models/Order');
-const auth = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 // @route   POST /api/shop/onboard
 // @desc    Shop onboarding/registration
 // @access  Private (new shop user)
-router.post('/onboard', auth, async (req, res) => {
+router.post('/onboard', protect, async (req, res) => {
   try {
     if (req.user.role !== 'shop') {
       return res.status(403).json({ success: false, message: 'User must have shop role' });
@@ -40,7 +40,7 @@ router.post('/onboard', auth, async (req, res) => {
 // @route   GET /api/shop/profile
 // @desc    Get shop profile (own)
 // @access  Private (Shop)
-router.get('/profile', auth, async (req, res) => {
+router.get('/profile', protect, async (req, res) => {
   try {
     if (req.user.role !== 'shop') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -62,7 +62,7 @@ router.get('/profile', auth, async (req, res) => {
 // @route   PUT /api/shop/profile
 // @desc    Update shop profile
 // @access  Private (Shop)
-router.put('/profile', auth, async (req, res) => {
+router.put('/profile', protect, async (req, res) => {
   try {
     if (req.user.role !== 'shop') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -91,7 +91,7 @@ router.put('/profile', auth, async (req, res) => {
 // @route   GET /api/shop/dashboard
 // @desc    Get shop dashboard stats
 // @access  Private (Shop)
-router.get('/dashboard', auth, async (req, res) => {
+router.get('/dashboard', protect, async (req, res) => {
   try {
     if (req.user.role !== 'shop') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -186,7 +186,7 @@ router.get('/dashboard', auth, async (req, res) => {
 // @route   GET /api/shop/designs
 // @desc    Get shop's own designs
 // @access  Private (Shop)
-router.get('/designs', auth, async (req, res) => {
+router.get('/designs', protect, async (req, res) => {
   try {
     if (req.user.role !== 'shop') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -223,7 +223,7 @@ router.get('/designs', auth, async (req, res) => {
 // @route   GET /api/shop/orders
 // @desc    Get shop's orders
 // @access  Private (Shop)
-router.get('/orders', auth, async (req, res) => {
+router.get('/orders', protect, async (req, res) => {
   try {
     if (req.user.role !== 'shop') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -262,7 +262,7 @@ router.get('/orders', auth, async (req, res) => {
 // @route   GET /api/shop/analytics
 // @desc    Get shop analytics
 // @access  Private (Shop)
-router.get('/analytics', auth, async (req, res) => {
+router.get('/analytics', protect, async (req, res) => {
   try {
     if (req.user.role !== 'shop') {
       return res.status(403).json({ success: false, message: 'Access denied' });

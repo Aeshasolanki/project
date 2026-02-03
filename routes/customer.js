@@ -3,12 +3,12 @@ const router = express.Router();
 const CustomerProfile = require('../models/CustomerProfile');
 const Order = require('../models/Order');
 const Design = require('../models/Design');
-const auth = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 // @route   GET /api/customer/profile
 // @desc    Get customer profile
 // @access  Private (Customer)
-router.get('/profile', auth, async (req, res) => {
+router.get('/profile', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -32,7 +32,7 @@ router.get('/profile', auth, async (req, res) => {
 // @route   PUT /api/customer/profile
 // @desc    Update customer profile
 // @access  Private (Customer)
-router.put('/profile', auth, async (req, res) => {
+router.put('/profile', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -61,7 +61,7 @@ router.put('/profile', auth, async (req, res) => {
 // @route   POST /api/customer/measurements
 // @desc    Add measurement profile
 // @access  Private (Customer)
-router.post('/measurements', auth, async (req, res) => {
+router.post('/measurements', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -91,7 +91,7 @@ router.post('/measurements', auth, async (req, res) => {
 // @route   PUT /api/customer/measurements/:id
 // @desc    Update measurement profile
 // @access  Private (Customer)
-router.put('/measurements/:id', auth, async (req, res) => {
+router.put('/measurements/:id', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -122,7 +122,7 @@ router.put('/measurements/:id', auth, async (req, res) => {
 // @route   DELETE /api/customer/measurements/:id
 // @desc    Delete measurement profile
 // @access  Private (Customer)
-router.delete('/measurements/:id', auth, async (req, res) => {
+router.delete('/measurements/:id', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -147,7 +147,7 @@ router.delete('/measurements/:id', auth, async (req, res) => {
 // @route   POST /api/customer/addresses
 // @desc    Add delivery address
 // @access  Private (Customer)
-router.post('/addresses', auth, async (req, res) => {
+router.post('/addresses', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -185,7 +185,7 @@ router.post('/addresses', auth, async (req, res) => {
 // @route   PUT /api/customer/addresses/:id
 // @desc    Update delivery address
 // @access  Private (Customer)
-router.put('/addresses/:id', auth, async (req, res) => {
+router.put('/addresses/:id', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -223,7 +223,7 @@ router.put('/addresses/:id', auth, async (req, res) => {
 // @route   DELETE /api/customer/addresses/:id
 // @desc    Delete delivery address
 // @access  Private (Customer)
-router.delete('/addresses/:id', auth, async (req, res) => {
+router.delete('/addresses/:id', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -257,7 +257,7 @@ router.delete('/addresses/:id', auth, async (req, res) => {
 // @route   POST /api/customer/favorites/:designId
 // @desc    Add design to favorites
 // @access  Private (Customer)
-router.post('/favorites/:designId', auth, async (req, res) => {
+router.post('/favorites/:designId', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -292,7 +292,7 @@ router.post('/favorites/:designId', auth, async (req, res) => {
 // @route   DELETE /api/customer/favorites/:designId
 // @desc    Remove design from favorites
 // @access  Private (Customer)
-router.delete('/favorites/:designId', auth, async (req, res) => {
+router.delete('/favorites/:designId', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -317,7 +317,7 @@ router.delete('/favorites/:designId', auth, async (req, res) => {
 // @route   GET /api/customer/favorites
 // @desc    Get customer's favorite designs
 // @access  Private (Customer)
-router.get('/favorites', auth, async (req, res) => {
+router.get('/favorites', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -343,7 +343,7 @@ router.get('/favorites', auth, async (req, res) => {
 // @route   GET /api/customer/orders
 // @desc    Get customer's orders
 // @access  Private (Customer)
-router.get('/orders', auth, async (req, res) => {
+router.get('/orders', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Access denied' });

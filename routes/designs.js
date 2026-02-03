@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Design = require('../models/Design');
-const auth = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 // @route   GET /api/designs
 // @desc    Browse all published designs (public/customer)
@@ -91,7 +91,7 @@ router.get('/:id', async (req, res) => {
 // @route   POST /api/designs
 // @desc    Create new design (Shop only)
 // @access  Private (Shop)
-router.post('/', auth, async (req, res) => {
+router.post('/', protect, async (req, res) => {
   try {
     if (req.user.role !== 'shop') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -116,7 +116,7 @@ router.post('/', auth, async (req, res) => {
 // @route   PUT /api/designs/:id
 // @desc    Update design (Shop only - own designs)
 // @access  Private (Shop)
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', protect, async (req, res) => {
   try {
     if (req.user.role !== 'shop') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -145,7 +145,7 @@ router.put('/:id', auth, async (req, res) => {
 // @route   PUT /api/designs/:id/publish
 // @desc    Publish design (requires shop certification)
 // @access  Private (Shop)
-router.put('/:id/publish', auth, async (req, res) => {
+router.put('/:id/publish', protect, async (req, res) => {
   try {
     if (req.user.role !== 'shop') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -185,7 +185,7 @@ router.put('/:id/publish', auth, async (req, res) => {
 // @route   DELETE /api/designs/:id
 // @desc    Delete/archive design
 // @access  Private (Shop)
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', protect, async (req, res) => {
   try {
     if (req.user.role !== 'shop') {
       return res.status(403).json({ success: false, message: 'Access denied' });

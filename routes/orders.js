@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
 const Design = require('../models/Design');
-const auth = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 // @route   POST /api/orders
 // @desc    Create new order (Customer only)
 // @access  Private (Customer)
-router.post('/', auth, async (req, res) => {
+router.post('/', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Only customers can create orders' });
@@ -88,7 +88,7 @@ router.post('/', auth, async (req, res) => {
 // @route   GET /api/orders
 // @desc    Get orders (filtered by role)
 // @access  Private
-router.get('/', auth, async (req, res) => {
+router.get('/', protect, async (req, res) => {
   try {
     const { status, page = 1, limit = 10 } = req.query;
 
@@ -145,7 +145,7 @@ router.get('/', auth, async (req, res) => {
 // @route   GET /api/orders/:id
 // @desc    Get order details
 // @access  Private
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', protect, async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
       .populate('designId', 'nameAr nameEn images pricing')
@@ -183,7 +183,7 @@ router.get('/:id', auth, async (req, res) => {
 // @route   PUT /api/orders/:id/status
 // @desc    Update order status (Shop/Admin)
 // @access  Private
-router.put('/:id/status', auth, async (req, res) => {
+router.put('/:id/status', protect, async (req, res) => {
   try {
     const { status, note } = req.body;
 
@@ -232,7 +232,7 @@ router.put('/:id/status', auth, async (req, res) => {
 // @route   POST /api/orders/:id/cancel
 // @desc    Cancel order
 // @access  Private
-router.post('/:id/cancel', auth, async (req, res) => {
+router.post('/:id/cancel', protect, async (req, res) => {
   try {
     const { reason } = req.body;
 
@@ -284,7 +284,7 @@ router.post('/:id/cancel', auth, async (req, res) => {
 // @route   POST /api/orders/:id/review
 // @desc    Submit order review (Customer only)
 // @access  Private
-router.post('/:id/review', auth, async (req, res) => {
+router.post('/:id/review', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Only customers can review orders' });

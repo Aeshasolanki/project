@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
-const auth = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 // @route   POST /api/payments/initialize
 // @desc    Initialize payment for order
 // @access  Private (Customer)
-router.post('/initialize', auth, async (req, res) => {
+router.post('/initialize', protect, async (req, res) => {
   try {
     if (req.user.role !== 'customer') {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -122,7 +122,7 @@ router.post('/webhook', async (req, res) => {
 // @route   POST /api/payments/release/:orderId
 // @desc    Release payment from escrow (after delivery)
 // @access  Private (System/Admin)
-router.post('/release/:orderId', auth, async (req, res) => {
+router.post('/release/:orderId', protect, async (req, res) => {
   try {
     if (!['admin', 'system'].includes(req.user.role)) {
       return res.status(403).json({ success: false, message: 'Access denied' });
@@ -177,7 +177,7 @@ router.post('/release/:orderId', auth, async (req, res) => {
 // @route   POST /api/payments/refund/:orderId
 // @desc    Process refund
 // @access  Private (Admin)
-router.post('/refund/:orderId', auth, async (req, res) => {
+router.post('/refund/:orderId', protect, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ success: false, message: 'Admin access required' });
@@ -274,7 +274,7 @@ router.get('/methods', async (req, res) => {
 // @route   GET /api/payments/status/:orderId
 // @desc    Check payment status
 // @access  Private
-router.get('/status/:orderId', auth, async (req, res) => {
+router.get('/status/:orderId', protect, async (req, res) => {
   try {
     const order = await Order.findById(req.params.orderId);
 

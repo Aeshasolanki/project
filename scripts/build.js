@@ -23,8 +23,8 @@ execSync('cd client && npm run build', { stdio: 'inherit' });
 
 // Copy frontend build to backend public folder
 console.log('\n📋 Copying frontend build to backend...');
-const buildPath = path.join(__dirname, 'client', 'dist');
-const publicPath = path.join(__dirname, 'public');
+const buildPath = path.join(__dirname, '..', 'client', 'dist');
+const publicPath = path.join(__dirname, '..', 'public');
 
 if (fs.existsSync(publicPath)) {
   fs.rmSync(publicPath, { recursive: true, force: true });
